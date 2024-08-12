@@ -103,6 +103,97 @@ const routes = [
                     }
                 }
             },
+            {
+                path: "/productos",
+                name: "Productos",
+                components: {
+                    default: () => import("./Pages/Productos/Productos.vue"),
+                    title: () => import("./components/Title.vue"),
+                } ,
+                props:{
+                    title:{
+                        title: "Productos"
+                    }
+                }
+            },
+            {
+                path: "/productos/:id",
+                name: "ProductosEdit",
+                components: {
+                    default: () => import("./Pages/Productos/Edit.vue"),
+                    title: () => import("./components/Title.vue"),
+                } ,
+                props:{
+                    title:{
+                        title: "Editar Producto"
+                    }
+                }
+            },
+            {
+                path: "/productos/crear",
+                name: "CrearProducto",
+                components: {
+                    default: () => import("./Pages/Productos/Crear.vue"),
+                    title: () => import("./components/Title.vue"),
+                } ,
+                props:{
+                    title:{
+                        title: "Crear Producto"
+                    }
+                }
+            },
+            {
+                path: "/sucursales",
+                name: "Sucursales",
+                components: {
+                    default: () => import("./Pages/Sucursales/Sucursales.vue"),
+                    title: () => import("./components/Title.vue"),
+                } ,
+                props:{
+                    title:{
+                        title: "Sucursales"
+                    }
+                }
+            },
+            {
+                path: "/sucursales/:id",
+                name: "SucursalesEdit",
+                components: {
+                    default: () => import("./Pages/Sucursales/Edit.vue"),
+                    title: () => import("./components/Title.vue"),
+                } ,
+                props:{
+                    title:{
+                        title: "Editar Sucursal"
+                    }
+                }
+            },
+            {
+                path: "/sucursales/crear",
+                name: "CrearSucursales",
+                components: {
+                    default: () => import("./Pages/Sucursales/Crear.vue"),
+                    title: () => import("./components/Title.vue"),
+                } ,
+                props:{
+                    title:{
+                        title: "Crear Sucursal"
+                    }
+                }
+            },
+            {
+                path: "/perfil",
+                name: "Perfil",
+                components: {
+                    default: () => import("./Pages/User/Perfil.vue"),
+                    title: () => import("./components/Title.vue"),
+                } ,
+                props:{
+                    title:{
+                        title: "Perfil"
+                    }
+                }
+            },
         ],
         beforeEnter: verifyToken,
     },

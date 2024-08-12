@@ -1,12 +1,15 @@
 <script setup>
 import { onMounted, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import { visitas, del, autorizar, cancel }  from '../../services/visitas.js'
-import Table from '../../components/Tables/Table.vue'
+import { visitas, del, autorizar, cancel, visita }  from '../../services/visitas.js'
+import Table from '../../components/Tables/Table.vue';
+import Modal from '../../components/Modal.vue';
 const router = useRouter();
 const headers = ['Motivo','Dirección','Cliente', 'Técnico', 'Sucursal', 'Fecha', 'Estado'];
 const columns = ['motivo','direccion','cliente_id', 'tecnico_id', 'sucursal_id', 'fechaHoraSolicitud','estatus'];
-const data = ref([])
+const data = ref([]);
+const visitaData = ref(null)
+const isOpenModal = ref(false)
 const edit = (id) => {
     console.log('Editando', id);
     router.push(`/visitas/${id}`);
@@ -47,6 +50,34 @@ const deleted = async (id) => {
 const addUser = () => {
     router.push('/visitas/crear');
 }
+const document = async (id) => {
+    try {
+        const res = await pdf(id);
+        if(res.status < 300){
+            console.log(res);
+            const file = new Blob([res.data], { type: 'application/pdf' });
+            const fileURL = URL.createObjectURL(file);
+            window.open(fileURL, '_blank');
+
+        }
+    } catch (error) {
+        console.log(error);
+    }
+}
+const show = async (id) => {
+    try {
+        const res = await visita(id)
+        if(res.status < 300){
+            visitaData.value = res.data
+            console.log(res)
+            isOpenModal.value = true
+        }else{
+            console.log(res)
+        }
+    } catch (error) {
+        console.error(error)
+    }
+}
 
 onMounted(async () => {
     try {
@@ -59,6 +90,7 @@ onMounted(async () => {
             item.cliente_id = item.cliente.nombre;
             item.tecnico_id = item.tecnico.nombre;
             item.sucursal_id = item.sucursal.nombre;
+            item['show'] = show
             if(item.estatus == 'Sin Autorizar'){
                 item['cancel'] = cancelar
                 item['success'] = auto
@@ -71,7 +103,27 @@ onMounted(async () => {
         console.log(error);
     }
 });
+function convertirFecha(fechaOriginal){
+    // Crear un objeto Date a partir de la cadena original
+    const fecha = new Date(fechaOriginal);
 
+    // Diccionario para traducir los meses al español
+    const mesesEs = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
+
+    // Extraer la información
+    const dia = fecha.getDate();
+    const mes = mesesEs[fecha.getMonth()];
+    const anio = fecha.getFullYear();
+    const horas = fecha.getHours();
+    const minutos = fecha.getMinutes().toString().padStart(2, '0');
+    const periodo = horas >= 12 ? 'PM' : 'AM';
+    const horas12 = horas % 12 || 12; // Convertir a formato 12 horas
+
+    // Formatear la fecha y hora
+    const fechaFormateada = `${dia} de ${mes}, ${anio}\n${horas12}:${minutos} ${periodo}`;
+    return fechaFormateada
+
+}
 </script>
 
 <template>
@@ -91,6 +143,57 @@ onMounted(async () => {
             :btn-action="addUser"
         />
     </div>
+
+     <!-- Modal -->
+    
+     <Modal  v-model:isOpen="isOpenModal">
+        <template v-slot:header>
+            <h2 class="text-2xl font-bold">Visita: {{ visitaData?.id || '0'  }}</h2>
+            <h2 class="text-xl font-bold">Sucursal</h2>
+            <div class="mt-4 grid grid-cols-2 gap-4">
+              <div>
+                <div class="text-sm font-medium text-gray-500">Nombre</div>
+                <div class="text-lg font-bold">{{visitaData.sucursal.nombre }}</div>
+              </div>
+              <div>
+                <div class="text-sm font-medium text-gray-500">Telefono</div>
+                <div class="text-lg font-bold">{{ visitaData.sucursal.telefono }}</div>
+              </div>
+              <div>
+                <div class="text-sm font-medium text-gray-500">Direccion</div>
+                <div class="text-lg font-bold">{{ visitaData.sucursal.direccion }}</div>
+              </div>
+            </div>
+        </template>
+        <template v-slot:body>
+            <h2 class="text-2xl font-bold">Detalles de la Visita</h2>
+            <div class="mt-4 grid grid-cols-2 gap-4">
+              <div>
+                <div class="text-sm font-medium text-gray-500">Fecha</div>
+                <div class="text-lg font-bold">{{ convertirFecha(visitaData.fechaHoraSolicitud).split("\n")[0] }}</div>
+              </div>
+              <div>
+                <div class="text-sm font-medium text-gray-500">Hora</div>
+                <div class="text-lg font-bold">{{ convertirFecha(visitaData.fechaHoraSolicitud).split("\n")[1] }}</div>
+              </div>
+              <div>
+                <div class="text-sm font-medium text-gray-500">Cliente</div>
+                <div class="text-lg font-bold">{{ visitaData.cliente.nombre }}</div>
+              </div>
+              <div>
+                <div class="text-sm font-medium text-gray-500">Tecnico</div>
+                <div class="text-lg font-bold">{{ visitaData.tecnico.nombre }} </div>
+              </div>
+            </div>
+        </template>
+        <template v-slot:footer>
+          <div class="flex float-end">
+            <button @click="()=>{isOpenModal = false}" class="bg-gray-200 text-gray-500 py-2 px-4 rounded">
+            Cerrar
+          </button>
+          </div>
+        </template>
+    </Modal>
 </template>
 
 <style scoped>

@@ -71,3 +71,14 @@ export const autorizar = async (id) => {
         return Promise.reject(error);
     }
 }
+
+export const pdf = async (id) => {
+    try {
+        const response = await axios.get(`ordeneServicios/generarPdf/${id}`, {
+            responseType: 'blob'
+        });
+        return response;
+    } catch (error) {
+        return Promise.reject(error);
+    }
+}

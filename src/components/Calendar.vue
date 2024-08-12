@@ -47,7 +47,8 @@
                   <div v-if="events.length > 0" class="bottom flex-grow h-30 py-1 w-full cursor-pointer">
                     <template v-for="(event, eIndex) in events">
                           <div class="event bg-purple-400 text-white rounded p-1 text-sm mb-1" :key="eIndex"
-                            v-if="validEvetDay(event.date, currentYear, currentMonth, day.date)"> 
+                            v-if="validEvetDay(event.date, currentYear, currentMonth, day.date)"
+                            @click="actionCard(event)"> 
                         <span class="event-name">{{ event.title }}</span><br>
                         <span class="time">{{ event.time }}</span>
                       </div>
@@ -79,7 +80,12 @@ export default {
     events: {
       type: Array,
       required: true,
-      default: () => []
+      default: () => [],
+    },
+    actionCard:{
+      type: Function,
+      required: true,
+      default: () => {},
     }
   },
   methods: {

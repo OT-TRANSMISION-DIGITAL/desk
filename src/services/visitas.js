@@ -20,7 +20,7 @@ export const visita = async (id) => {
 
 export const del = async (id) => {
     try {
-        const response = await axios.patch(`visitas/cancelar/${id}`);
+        const response = await axios.delete(`visitas/${id}`);
         return response;
     } catch (error) {
         return Promise.reject(error);

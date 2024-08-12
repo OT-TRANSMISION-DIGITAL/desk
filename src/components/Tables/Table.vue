@@ -31,7 +31,7 @@
         <tbody>
           <tr v-for="(item, index) in paginatedData" :key="item.id" class="odd:bg-gray-200 even:bg-gray-300">
             <td class="border border-[#3e4095] pl-2">{{ item.id }}</td>
-            <td class="border border-[#3e4095] pl-2" v-for="(column, i) in columns" :key="i">{{ item[column] }}</td>
+            <td class="border border-[#3e4095] pl-2" v-for="(column, i) in columns" :key="i" v-html="item[column]"></td>
             <td class="border-l-0 border-t-0 border-0 border-[#3e4095] pl-2 flex gap-2">
               <button class="text-red-500" v-if="item?.delete" @click="item?.delete(item.id)">
                 <IconDelete />
@@ -44,6 +44,12 @@
               </button>
               <button class="text-red-500" v-if="item?.cancel" @click="item?.cancel(item.id)">
                 <Cancelar />
+              </button>
+              <button class="text-red-500" v-if="item?.document" @click="item?.document(item.id)">
+                <Document />
+              </button>
+              <button class="text-red-500" v-if="item?.show" @click="item?.show(item.id)">
+                <Show />
               </button>
             </td>
           </tr>
@@ -60,6 +66,8 @@ import IconEdit from '../../assets/svgs/edit.vue';
 import Pagination from './Pagination.vue';
 import Cancelar from '../../assets/svgs/cancel.vue';
 import Succes from '../../assets/svgs/succes.vue';
+import Document from '../../assets/svgs/document.vue'
+import Show from '../../assets/svgs/show.vue'
 
 const props = defineProps({
   headers: {
@@ -86,7 +94,7 @@ const props = defineProps({
   }
 });
 
-const itemsPerPage = ref(10);
+const itemsPerPage = ref(15);
 const currentPage = ref(1);
 const totalPages = computed(() => Math.ceil(props.data.length / itemsPerPage.value));
 

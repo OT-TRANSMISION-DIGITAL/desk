@@ -16,6 +16,9 @@
 <script setup>
 import Footer from '../layouts/Footer.vue'
 import SideBar from '../layouts/SideBar.vue'
+import CrearUser from '../Pages/Usuarios/Crear.vue'
+import CrearCliente from '../Pages/Clientes/Crear.vue'
+import Users from '../Pages/Usuarios/Usuarios.vue'
 </script>
 
 <style>

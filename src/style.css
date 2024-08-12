@@ -1,3 +1,49 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+
+/* Contenedor del tooltip */
+.tooltip {
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+  }
+  
+  /* Texto del tooltip */
+  .tooltip .tooltiptext {
+    visibility: hidden;
+    width: auto;
+    background-color: black;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px 0;
+    position: absolute;
+    z-index: 99999; /* Asegura que el tooltip sobresalga */
+    bottom: -125%; /* Posiciona el tooltip arriba del elemento */
+    left: 180%;
+    margin-left: -60px; /* Ajusta la posición horizontal del tooltip */
+    opacity: 0;
+    transition: opacity 0.3s;
+    padding: 5px;
+  }
+  
+  /* Flecha del tooltip */
+  .tooltip .tooltiptext::after {
+    content: "";
+    position: absolute;
+    bottom: 100%; /* Posiciona la flecha en la parte inferior del tooltip */
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: transparent transparent black transparent;
+  }
+  
+  /* Muestra el tooltip cuando se hace hover */
+  .tooltip:hover .tooltiptext {
+    visibility: visible;
+    opacity: 1;
+  }
+  

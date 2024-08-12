@@ -104,12 +104,14 @@
                     Editar
                 </button>
             </div>
-
         </form>
+        <span v-if="error.message" class="text-red-500 text-sm">{{
+                error.message }}</span>
     </div>
-    <div class="absolute top-0 left-0 right-0 z-50 w-full p-4 overflow-x-hidden overflow-y-auto h-[calc(100%-1rem)] max-h-full"
+    
+    <div class="absolute top-0 left-0 right-0 z-50 w-full p-4 overflow-x-hidden overflow-y-auto"
         v-show="showModal">
-        <div class="relative w-full max-h-full">
+        <div class="relative w-full">
             <!-- Modal content -->
             <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
                 <!-- Modal header -->
@@ -131,40 +133,60 @@
                 </div>
                 <!-- Modal body -->
                 <div class="p-4 md:p-5 space-y-4">
+                    <div class="min-h-[38rem] max-h-[38rem] overflow-auto">
+                        <div class="mt-5 gap-5 grid grid-cols-1 justify-center overflow-y-auto  ">
+                            <!-- <div v-for="(detalle, index) in form.detalles.value" :key="index"
+                                class="w-auto max-w-2xl p-8 border-4 border-[#3E4095] rounded-md shadow-md col-span-1">
+                                <h2 class="mb-12 text-4xl font-bold text-center text-[#3E4095]">Detalle {{ (index+1) }}</h2>
+                                <div class="grid grid-cols-2 gap-10 mt-5">
+                                </div>
+                            </div> -->
 
-                    <div class="mt-5 gap-5 grid grid-cols-2 justify-center overflow-y-auto">
-                        <div v-for="(detalle, index) in form.detalles.value" :key="index"
-                            class="w-auto max-w-2xl p-8 border-4 border-[#3E4095] rounded-md shadow-md col-span-1">
-                            <h2 class="mb-12 text-4xl font-bold text-center text-[#3E4095]">Detalle {{ (index+1) }}</h2>
-                            <div class="grid grid-cols-2 gap-10 mt-5">
-                                <div class="col-span-1">
-                                    <Input v-model="detalle.cantidad.value"
-                                        label="Cantidad" placeholder="Cantidad"
-                                        type="number" name="cantidad" id="cantidad"
-                                        :validation-status="detalle.cantidad.error.status"
-                                        :validation-message="detalle.cantidad.error.message" />
-                                </div>
-                                <div class="col-span-1">
-                                    <label for="productos"
-                                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Seleccione un
-                                        Cliente</label>
-                                    <select v-model="detalle.producto_id.value" id="countries"
-                                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                                        <option selected disabled>Elija una opción</option>
-                                        <option v-for="rol in productos" :value="rol.id">{{ rol.nombre }}</option>
-                                    </select>
-                                    <!-- Mensaje de error -->
-                                    <span v-if="detalle.producto_id.error.status == 'error'" class="text-red-500 text-sm">{{
-                                detalle.producto_id.error.message }}</span>
-                                </div>
-
-                                <div class="col-span-2">
-                                    <Input v-model="detalle.descripcion.value" label="Descripción" placeholder="Descripción"
-                                        type="text" name="descripcion" id="descripcion"
-                                        :validation-status="detalle.descripcion.error.status"
-                                        :validation-message="detalle.descripcion.error.message" />
-                                </div>
-                            </div>
+                            <table class="min-w-full bg-white border-2 border-[#3e4095]">
+                                <thead class="bg-neutral-50 bg-opacity-75 text-[#3e4095] border-x">
+                                <tr>
+                                    <th class="border border-[#3e4095]" v-for="(header, i) in ['#','Cantidad', 'Descripción','Producto', '']" :key="i">{{ header }}</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                    <tr v-for="(detalle, index) in form.detalles.value" :key="index" class="odd:bg-gray-200 even:bg-gray-300">
+                                        <td class="border border-[#3e4095] pl-2">{{ index+1 }}</td>
+                                        <td class="pt-5 pb-0">
+                                            <Input v-model="detalle.cantidad.value"
+                                            placeholder="Cantidad"
+                                            type="number" name="cantidad" id="cantidad"
+                                            :validation-status="detalle.cantidad.error.status"
+                                            :validation-message="detalle.cantidad.error.message" />
+                                        </td>
+                                        <td class="pt-5 pb-0">
+                                            <Input v-model="detalle.descripcion.value" placeholder="Descripción"
+                                                type="text" name="descripcion" id="descripcion"
+                                                :validation-status="detalle.descripcion.error.status"
+                                                :validation-message="detalle.descripcion.error.message" />
+                                        </td>
+                                        <td class="pb-2 pt-0">
+                                            <select v-model="detalle.producto_id.value"
+                                                class="inline-block
+                                                bg-gray-50 border border-gray-300 text-gray-900 
+                                                text-sm rounded-lg 
+                                                focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 
+                                                dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 
+                                                w-full m-0 p-2 py-4">
+                                                <option selected disabled value="">Seleccione un Producto</option>
+                                                <option v-for="rol in productos" :value="rol.id">{{ rol.nombre }}</option>
+                                            </select>
+                                            <!-- Mensaje de error -->
+                                            <span v-if="detalle.producto_id.error.status == 'error'" class="text-red-500 text-sm">{{
+                                            detalle.producto_id.error.message }}</span>
+                                        </td>
+                                        <td class="border-l-0 border-t-0 border-0 border-[#3e4095] pl-2 pr-0">
+                                        <button class="text-red-500" @click="deleteDetalle(detalle)">
+                                            <Cancelar />
+                                        </button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                     <!-- Modal footer -->
@@ -189,7 +211,7 @@
                 </div>
             </div>
         </div> 
-    </div> 
+    </div>
 </template>
 
 <script setup>
@@ -200,7 +222,9 @@ import { clientes as clis } from '../../services/clientes.js'
 import { tecnicos as tecs } from '../../services/usuarios.js'
 import { productos as prods } from '../../services/productos.js'
 import { useRoute, useRouter } from 'vue-router'
-import { parseAndFormatDate } from '../../global/Parser.js'
+import { parseAndFormatDate } from '../../global/Parser.js';
+import Cancelar from '../../assets/svgs/cancel.vue';
+import Table from '../../components/Tables/Table.vue';
 
 const route = useRoute();
 const router = useRouter();

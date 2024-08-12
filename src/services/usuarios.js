@@ -62,3 +62,7 @@ export const user = async () => {
         return Promise.reject(error);
     }
 }
+
+export const updateImagen = (id, imagen) => {
+    return axios.post(`usuarios/guardarImagen/${id}`, imagen);
+}
