@@ -38,6 +38,12 @@
       "dist/**/*",
       "public/**/*",
       "electron/main.js"
-    ]
+    ],
+    "win": {
+      "icon": "public/icon.ico"
+    },
+    "linux": {
+      "icon": "public/icon.png"
+    }
   }
 }

@@ -19,7 +19,7 @@ const cancelar = async (id) => {
         const res = await cancel(id);
         if(res.status < 300){
             //console.log('Cancelado', id);
-            location.reload();
+            await init()
         }
     } catch (error) {
         console.error(error);
@@ -30,7 +30,7 @@ const auto = async (id) => {
         const res = await autorizar(id);
         if(res.status < 300){
             //console.log('Autorizado', id);
-            location.reload();
+            await init()
         }
     } catch (error) {
         console.error(error);
@@ -41,7 +41,7 @@ const deleted = async (id) => {
         const res = await del(id);
         if(res.status < 300){
             //console.log('Eliminado', id);
-            location.reload();
+            await init()
         }
     } catch (error) {
         console.error(error);
@@ -76,6 +76,31 @@ const show = async (id) => {
         }
     } catch (error) {
         console.error(error)
+    }
+}
+async function init(){
+    try {
+        const res = await visitas();
+        const d = res.data.data;
+        //console.log(d)
+        data.value = d.map((item) => {
+            item['edit'] = edit
+            // item['delete'] = deleted
+            item.cliente_id = item.cliente.nombre;
+            item.tecnico_id = item.tecnico.nombre;
+            item.sucursal_id = item.sucursal?.nombre || '';
+            item['show'] = show
+            if(item.estatus == 'Sin Autorizar'){
+                item['cancel'] = cancelar
+                item['success'] = auto
+            }else if(item.estatus == 'Autorizada'){
+                item['cancel'] = cancelar
+            }
+            return item;
+        });
+        paginateData();
+    } catch (error) {
+        console.error(error);
     }
 }
 

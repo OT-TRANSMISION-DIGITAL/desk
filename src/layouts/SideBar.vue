@@ -54,7 +54,7 @@
           <span class="mx-4 font-medium uppercase">Productos / Servicios</span>
         </div>
       </RouterLink>
-      <hr class="border-[#3E4095] my-10 border-2" />
+      <!-- <hr class="border-[#3E4095] my-10 border-2" />
       <RouterLink to="/sucursales" active-class="active"
         class="flex items-center px-4 py-2 text-gray-400 rounded-md hover:bg-gray-200 hover:text-gray-700">
         <div
@@ -66,7 +66,7 @@
           </svg>
           <span class="mx-4 font-medium uppercase">Sucursales</span>
         </div>
-      </RouterLink>
+      </RouterLink> -->
       <hr class="border-[#3E4095] my-10 border-2" />
       <RouterLink to="/ordenes" active-class="active"
         class="flex items-center px-4 py-2 text-gray-400 rounded-md hover:bg-gray-200 hover:text-gray-700">

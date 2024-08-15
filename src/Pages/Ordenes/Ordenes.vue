@@ -19,7 +19,7 @@ const cancelar = async (id) => {
         const res = await cancel(id);
         if(res.status < 300){
             //console.log('Cancelado', id);
-            location.reload();
+            await init()
         }
     } catch (error) {
         console.error(error);
@@ -30,7 +30,7 @@ const auto = async (id) => {
         const res = await autorizar(id);
         if(res.status < 300){
             //console.log('Autorizado', id);
-            location.reload();
+            await init()
         }
     } catch (error) {
         console.error(error);
@@ -41,7 +41,7 @@ const deleted = async (id) => {
         const res = await del(id);
         if(res.status < 300){
             //console.log('Eliminado', id);
-            location.reload();
+            await init()
         }
     } catch (error) {
         console.error(error);
@@ -77,7 +77,34 @@ const show = async (id) => {
 const addUser = () => {
     router.push('/ordenes/crear');
 }
-
+async function init(){
+    try {
+        const res = await ordenes();
+        const d = res.data.data;
+        //console.log(d)
+        data.value = d.map((item) => {
+            // item['delete'] = deleted
+            item.cliente_id = item.cliente.nombre;
+            item.tecnico_id = item.tecnico.nombre;
+            item.sucursal_id = item.sucursal?.nombre || '';
+            item['show'] = show
+            if(item.estatus == 'Sin Autorizar'){
+                item['success'] = auto
+                item['edit'] = edit
+                item['cancel'] = cancelar
+            }else if(item.estatus == 'Autorizada'){
+                item['cancel'] = cancelar
+                item['edit'] = edit
+            }else if(item.estatus == 'Finalizada'){
+                item['document'] = document
+            }
+            return item;
+        });
+        paginateData();
+    } catch (error) {
+        console.error(error);
+    }
+}
 onMounted(async () => {
     try {
         const res = await ordenes();
