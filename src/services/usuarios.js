@@ -1,8 +1,10 @@
 import axios from './axios.js';
+import {useGlobalState} from '../store/Loading.js'
+const { establecerLoading } = useGlobalState()
 
-export const usuarios = async () => {
+export const usuarios = async (page) => {
     try {
-        const response = await axios.get('usuarios');
+        const response = await axios.get('usuarios?page=' + (page || 1));
         return response;
     } catch (error) {
         return Promise.reject(error);
@@ -37,20 +39,26 @@ export const deleteUsuario = async (id) => {
 }
 
 export const crearUsuario = async (usuario) => {
+    establecerLoading(true)
     try {
         const response = await axios.post('registrar', usuario);
         return response;
     } catch (error) {
         return Promise.reject(error);
+    }finally{
+        establecerLoading(false)
     }
 }
 
 export const editarUsuario = async (id, usuario) => {
+    establecerLoading(true)
     try {
         const response = await axios.put(`usuarios/${id}`, usuario);
         return response;
     } catch (error) {
         return Promise.reject(error);
+    }finally{
+        establecerLoading(false)
     }
 }
 
@@ -65,4 +73,8 @@ export const user = async () => {
 
 export const updateImagen = (id, imagen) => {
     return axios.post(`usuarios/guardarImagen/${id}`, imagen);
+}
+
+export const fechasTecnico = (tecnico, fecha) => {
+    return axios.get(`horarios?fecha=${fecha}&tecnico=${tecnico}`);
 }

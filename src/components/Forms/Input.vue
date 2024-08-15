@@ -2,7 +2,9 @@
     <div class="relative mb-6 font-sans text-[#3E4095] text-2xl"
       @click="click"
     >
-      <label :for="id" :class="['text-[#3E4095]  '+labelClass, { 'shrink': isFocused || modelValue || (type == 'date' || type == 'datetime-local') }]">{{ label }}</label>
+      <label :for="id" :class="['text-[#3E4095]  '+labelClass, { 'shrink': isFocused || modelValue || (type == 'date' || type == 'datetime-local' || type == 'time') }]">
+        {{ label }}
+      </label>
       <input
         :type="type"
         :id="id"
@@ -12,7 +14,9 @@
         @input="handleInput"
         @focus="isFocused = true"
         @blur="handleBlur"
+        @change="change && change($event)"
         :disabled="disabled"
+        :min="minDate ? minDate : undefined"
         ref="inputRef"
       />
       <p :class="messageClass">
@@ -34,6 +38,8 @@
     validationMessage: string;
     id?: string;
     type?: string;
+    change?: (value: any) => void;
+    minDate?: string;
   }>();
   
   const emit = defineEmits(['update:modelValue']);

@@ -40,6 +40,6 @@ export const parseAndFormatDate = (dateTimeString, formatString) => {
   
     const date = parseDateTimeString(dateTimeString);
     const newDate = formatDateTimeString(date, formatString);
-    console.log(newDate);
+    //console.log(newDate);
     return newDate
 };

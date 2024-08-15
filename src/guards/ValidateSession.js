@@ -11,14 +11,14 @@ async function verifyToken(to, from, next) {
             to.path === '/login' ? next({name: 'Dashboard'}) : next();
             return;
         }else{
-            console.log(userResponse);
+            //console.log(userResponse);
             localStorage.removeItem('token');
             localStorage.removeItem('user');
             next({name: 'Login'});
             return;
         }
     } catch (error) {
-        console.log(error);
+        console.error(error);
         localStorage.removeItem('token');
         localStorage.removeItem('user');
         next({name: 'Login'});

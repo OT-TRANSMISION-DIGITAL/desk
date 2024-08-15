@@ -18,18 +18,50 @@
                 />
             </div>
             <div class="col-span-1">
-                <Input 
-                    v-model="form.fechaHoraSolicitud.value"
-                    label="Fecha de solicitud"
-                    placeholder="Fecha de solicitud"
-                    type="datetime-local"
-                    name="fechaHoraSolicitud"
-                    id="fechaHoraSolicitud"
-                    :validation-status="form.fechaHoraSolicitud.error.status"
-                    :validation-message="form.fechaHoraSolicitud.error.message"
-                />
+                <label for="countries"
+                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Seleccione un
+                        Técnico</label>
+                    <select v-model="form.tecnico_id.value" id="countries"
+                        @change="changueTime($event)"
+                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                        <option selected disabled>Elija una opción</option>
+                        <option v-for="rol in tecnicos" :value="rol.id">{{ rol.nombre }}</option>
+                    </select>
+                    <!-- Mensaje de error -->
+                    <span v-if="form.tecnico_id.error.status == 'error'" class="text-red-500 text-sm">{{
+                form.tecnico_id.error.message }}</span>
             </div>
-            <div class="col-span-1">
+                <div class="col-span-1">
+                    <Input v-model="form.fechaSolicitud.value" label="Fecha de solicitud"
+                        placeholder="Fecha de solicitud" type="date" name="fechaHoraSolicitud" id="fechaHoraSolicitud"
+                        :validation-status="form.fechaSolicitud.error.status"
+                        :change="changueTime"
+                        :min-date="new Date().toISOString().split('T')[0]"
+                        :validation-message="form.fechaSolicitud.error.message" 
+                        />
+                </div>
+                <div class="col-span-1">
+                    <!-- <Input v-model="form.horaSolicitud.value" label="Hora de solicitud"
+                        placeholder="Hora de solicitud" type="time" name="horaSolicitud" id="horaSolicitud"
+                        :validation-status="form.horaSolicitud.error.status"
+                        :validation-message="form.horaSolicitud.error.message"
+                        :change="changueValidTime"
+                        :disabled="disableTime" /> -->
+                        <label for="countries"
+                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Seleccione la hora de
+                        solicitud</label>
+                    <select v-model="form.horaSolicitud.value" id="countries"
+                        :disabled="disableTime"
+                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                        <option selected disabled value="">00:00:00</option>
+                        <option v-for="VT in timesValidates" :value="VT">{{ VT }}</option>
+                    </select>
+                    <!-- Mensaje de error -->
+                    <span v-if="form.horaSolicitud.error.status == 'error'" class="text-red-500 text-sm">
+                        {{form.horaSolicitud.error.message }}</span>
+
+                </div>
+            <!-- <div class="col-span-1">
                 <Input 
                     v-model="form.fechaHoraLlegada.value"
                     label="Fecha de Llegada"
@@ -52,19 +84,7 @@
                     :validation-status="form.fechaHoraSalida.error.status"
                     :validation-message="form.fechaHoraSalida.error.message"
                 />
-            </div>
-            <div class="col-span-1">
-                <Input 
-                    v-model="form.direccion.value"
-                    label="Dirección"
-                    placeholder="Dirección"
-                    type="email"
-                    name="direccion"
-                    id="direccion"
-                    :validation-status="form.direccion.error.status"
-                    :validation-message="form.direccion.error.message"
-                />
-            </div>
+            </div> -->
             <div class="col-span-1">
                 <label for="countries" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Seleccione un Cliente</label>
                 <select v-model="form.cliente_id.value"
@@ -86,15 +106,17 @@
                 <!-- Mensaje de error -->
                 <span v-if="form.sucursal_id.error.status == 'error'" class="text-red-500 text-sm">{{ form.sucursal_id.error.message }}</span>
             </div>
-            <div class="col-span-1">
-                <label for="countries" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Seleccione un Técnico</label>
-                <select v-model="form.tecnico_id.value"
-                id="countries" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                    <option selected disabled>Elija una opción</option>
-                    <option v-for="rol in tecnicos" :value="rol.id">{{ rol.nombre }}</option>
-                </select>
-                <!-- Mensaje de error -->
-                <span v-if="form.tecnico_id.error.status == 'error'" class="text-red-500 text-sm">{{ form.tecnico_id.error.message }}</span>
+            <div class="col-span-2">
+                <Input 
+                    v-model="form.direccion.value"
+                    label="Dirección"
+                    placeholder="Dirección"
+                    type="text"
+                    name="direccion"
+                    id="direccion"
+                    :validation-status="form.direccion.error.status"
+                    :validation-message="form.direccion.error.message"
+                />
             </div>
         </div>
         <div class="flex justify-end mt-8 space-x-8">
@@ -118,10 +140,14 @@ import { crear } from '../../services/visitas.js'
 import Input from '../../components/Forms/Input.vue'
 import { clientes as clis } from '../../services/clientes.js'
 import { tecnicos as tecs } from '../../services/usuarios.js'
+import {fechasTecnico} from '../../services/usuarios.js'
 const router = useRouter();
 const clientes = ref([]);
 const tecnicos = ref([]);
 const sucursales = ref([]);
+const initTime = ref(null);
+const disableTime = ref(true);
+const timesValidates = ref([]);
 
 const form = ref({
     motivo: {
@@ -131,7 +157,14 @@ const form = ref({
             message: ''
         }
     },
-    fechaHoraSolicitud: {
+    horaSolicitud: {
+        value: '',
+        error: {
+            status: 'error',
+            message: 'Por favor, seleccione un técnico y una fecha'
+        }
+    },
+    fechaSolicitud: {
         value: '',
         error: {
             status: 'default',
@@ -198,10 +231,12 @@ const submit = async (e) => {
           second: '2-digit',
           hour12: false,
         };
+    const fechaHoraSolicitud = new Date(form.value.fechaSolicitud.value + 'T' + form.value.horaSolicitud.value);
     const data = {
         motivo: form.value.motivo.value,
         // Format date a Y-m-d H:i:s
-        fechaHoraSolicitud: new Date(form.value.fechaHoraSolicitud.value).toLocaleDateString('en-ZA', options).split('.')[0].replace('T', ' ').replaceAll('/', '-').replace(',', ''),
+        fechaHoraSolicitud: new Date(fechaHoraSolicitud).toLocaleDateString('en-ZA', options).split('.')[0].replace('T', ' ').replaceAll('/', '-').replace(',', ''),
+        // fechaHoraSolicitud: new Date(form.value.fechaHoraSolicitud.value).toLocaleDateString('en-ZA', options).split('.')[0].replace('T', ' ').replaceAll('/', '-').replace(',', ''),
         fechaHoraLlegada: form.value.fechaHoraLlegada.value ? new Date(form.value.fechaHoraLlegada.value).toLocaleDateString('en-ZA', options).split('.')[0].replace('T', ' ').replaceAll('/', '-').replace(',', '') : null,
         fechaHoraSalida: form.value.fechaHoraSalida.value ? new Date(form.value.fechaHoraSalida.value).toLocaleDateString('en-ZA', options).split('.')[0].replace('T', ' ').replaceAll('/', '-').replace(',', '') : null,
         direccion: form.value.direccion.value,
@@ -217,7 +252,7 @@ const submit = async (e) => {
             }, 3000);
         }
     } catch (error) {
-        console.log(error);
+        console.error(error);
     }
 }
 
@@ -232,13 +267,22 @@ const validar = ()=>{
         form.value.motivo.error.status = 'success';
         form.value.motivo.error.message = '';
     }
-    if(form.value.fechaHoraSolicitud.value == ''){
-        form.value.fechaHoraSolicitud.error.status = 'error';
-        form.value.fechaHoraSolicitud.error.message = 'El campo es requerido';
+    /// Fecha de solicitud y hora de solicitud
+    if(form.value.fechaSolicitud.value == ''){
+        form.value.fechaSolicitud.error.status = 'error';
+        form.value.fechaSolicitud.error.message = 'El campo es requerido';
         valid = false;
     }else{
-        form.value.fechaHoraSolicitud.error.status = 'success';
-        form.value.fechaHoraSolicitud.error.message = '';
+        form.value.fechaSolicitud.error.status = 'success';
+        form.value.fechaSolicitud.error.message = '';
+    }
+    if(form.value.horaSolicitud.value == ''){
+        form.value.horaSolicitud.error.status = 'error';
+        form.value.horaSolicitud.error.message = 'El campo es requerido';
+        valid = false;
+    }else{
+        form.value.horaSolicitud.error.status = 'success';
+        form.value.horaSolicitud.error.message = '';
     }
     if(form.value.direccion.value == ''){
         form.value.direccion.error.status = 'error';
@@ -247,6 +291,12 @@ const validar = ()=>{
     }else{
         form.value.direccion.error.status = 'success';
         form.value.direccion.error.message = '';
+    }
+    // Dirección mayor a 10
+    if(form.value.direccion.value != '' && form.value.direccion.value.length < 10){
+        form.value.direccion.error.status = 'error';
+        form.value.direccion.error.message = 'El campo debe tener al menos 10 caracteres';
+        valid = false;
     }
     if(form.value.cliente_id.value == ''){
         form.value.cliente_id.error.status = 'error';
@@ -264,14 +314,6 @@ const validar = ()=>{
         form.value.tecnico_id.error.status = 'success';
         form.value.tecnico_id.error.message = '';
     }
-    if(form.value.sucursal_id.value == ''){
-        form.value.sucursal_id.error.status = 'error';
-        form.value.sucursal_id.error.message = 'El campo es requerido';
-        valid = false;
-    }else{
-        form.value.sucursal_id.error.status = 'success';
-        form.value.sucursal_id.error.message = '';
-    }
     return valid;
 }
 
@@ -282,21 +324,48 @@ const changeCliente = (idCliente) =>{
 
 const sub = (e) => {e.preventDefault();}
 
+const changueTime = async () => {
+    timesValidates.value = [];
+    if(!form.value.tecnico_id.value || !form.value.fechaSolicitud.value){
+        form.value.horaSolicitud.error.message = 'Por favor, seleccione un técnico y una fecha';
+        return;
+    }
+    if(!form.value.tecnico_id.value){
+        form.value.horaSolicitud.error.message = 'Por favor, seleccione un técnico';
+        return;
+    }
+    if(!form.value.fechaSolicitud.value){
+        form.value.horaSolicitud.error.message = 'Por favor, seleccione una fecha';
+        return;
+    }
+    form.value.horaSolicitud.error.message = '';
+    form.value.horaSolicitud.value = '';
+    try {
+        const res = await fechasTecnico(form.value.tecnico_id.value, form.value.fechaSolicitud.value);
+        if(res.status < 300){
+            timesValidates.value = res.data?.horarios;
+            // Add init time si no esta en el array
+            disableTime.value = false;
+        }
+    } catch (error) {
+        console.error(error);
+    }
+}
 
 onMounted(async ()=>{
     try {
         const resClientes = await clis();
         if(resClientes.status < 300){
             clientes.value = resClientes.data.data;
-            console.log(clientes.value);
+            //console.log(clientes.value);
         }
         const resTecnicos = await tecs();
         if(resTecnicos.status < 300){
             tecnicos.value = resTecnicos.data;
-            console.log(tecnicos.value);
+            //console.log(tecnicos.value);
         }
     } catch (error) {
-        console.log(error);
+        console.error(error);
     }
 
 })

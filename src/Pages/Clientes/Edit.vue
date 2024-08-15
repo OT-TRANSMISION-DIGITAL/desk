@@ -129,6 +129,12 @@ const validar = () => {
         form.value.nombre.error.message = 'El nombre es requerido';
         valid = false;
     }
+    // Validar nombre solo debe tener letras
+    if(!/^[a-zA-Z\s]*$/.test(form.value.nombre.value)){
+        form.value.nombre.error.status = 'error';
+        form.value.nombre.error.message = 'El nombre solo debe contener letras';
+        valid = false;
+    }
     if(form.value.email.value === ''){
         form.value.email.error.status = 'error';
         form.value.email.error.message = 'El correo es requerido';

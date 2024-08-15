@@ -122,7 +122,7 @@ const submit = async (e) => {
             router.push('/usuarios')
         }
     } catch (error) {
-        console.log(error);
+        console.error(error);
     }
 }
 
@@ -170,14 +170,14 @@ onMounted(async ()=>{
         }
         const resUsuario = await usuario(route.params.id)
         if(res.status < 300){
-            console.log(resUsuario)
+            //console.log(resUsuario)
             form.value.email.value = resUsuario.data.correo
             form.value.nombre.value = resUsuario.data.nombre
             form.value.phone.value = formatPhoneNumber(resUsuario.data.telefono)
             form.value.rol.value = resUsuario.data.rol_id
         }
     } catch (error) {
-        console.log(error);
+        console.error(error);
     }
 })
 

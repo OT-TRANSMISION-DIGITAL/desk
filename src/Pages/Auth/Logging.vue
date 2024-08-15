@@ -83,6 +83,7 @@ const verifyCode = async (e) => {
 }
 const validate = () => {
     let valid = true;
+    error.value = '';
     if (!form.value.email.value) {
         form.value.email.error.status = 'error';
         form.value.email.error.message = 'El campo email es requerido';

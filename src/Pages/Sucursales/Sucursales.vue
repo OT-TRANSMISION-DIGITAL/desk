@@ -8,18 +8,18 @@ const headers = ['Nombre','Cliente','Teléfono','Direccion'];
 const columns = ['nombre','cliente','telefono','direccion'];
 const data = ref([])
 const edit = (id) => {
-    console.log('Editando', id);
+    //console.log('Editando', id);
     router.push(`/sucursales/${id}`);
 }
 const deleted = async (id) => {
     try {
         const res = await deleteSucursal(id);
         if(res.status < 300){
-            console.log('Eliminado', id);
+            //console.log('Eliminado', id);
             location.reload();
         }
     } catch (error) {
-        console.log(error);
+        console.error(error);
     }
 }
 const addUser = () => {
@@ -30,17 +30,36 @@ onMounted(async () => {
     try {
         const res = await sucursales();
         const d = res.data.data;
-        console.log(d)
+        //console.log(d)
         data.value = d.map((item) => {
             item['edit'] = edit
             item['delete'] = deleted
             item.cliente = item.cliente.nombre
             return item;
         });
+        paginateData();
     } catch (error) {
-        console.log(error);
+        console.error(error);
     }
 });
+
+async function paginateData(){
+    // Siclo para paginar la api mientrar traega resultados
+    let page = 2;
+    let res = await sucursales(page);
+    let d = res.data.data;
+    while(d.length > 0){
+        data.value = data.value.concat(d.map((item) => {
+            item['edit'] = edit
+            item['delete'] = deleted
+            item.cliente = item.cliente.nombre
+            return item;
+        }));
+        page++;
+        res = await sucursales(page);
+        d = res.data.data;
+    }
+}
 
 </script>
 

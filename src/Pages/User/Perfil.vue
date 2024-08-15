@@ -83,7 +83,7 @@
                     <div class="sm:flex sm:items-start mb-4">
                         <h1 class="text-xl">Actualizar Imagen</h1>
                     </div>
-                    <InputFile v-model="imagen" />
+                    <InputFile v-model="imagen" v-model:image-s-r-c="IMGSRC"/>
                     <div>
                         <span>
                             <p class="text-red-500">{{ error }}</p>
@@ -117,6 +117,7 @@ const path_api = import.meta.env.VITE_IMG_URL;
 const {establecerUsuario, state} = useGlobalState()
 const imagen = ref(null)
 const isOpen = ref(false)
+const IMGSRC = ref('')
 const error = ref(null)
 const usuario = ref({
     id: 0,
@@ -167,7 +168,7 @@ const sendImagen = async () => {
             error.value = resUpdateImagen?.data?.message || 'Error al actualizar la imagen';
         }
     } catch (err) {
-        console.log(err);
+        console.error(err);
         error.value = err?.response?.data?.message || err?.data?.message || err?.message || 'Error al actualizar la imagen';
     }
     // isOpen = false; 
@@ -182,7 +183,7 @@ const initComponent = async () => {
         } else {
         }
     } catch (error) {
-        console.log(error);
+        console.error(error);
     }
 }
 
@@ -195,13 +196,13 @@ async function logOut(){
         localStorage.removeItem('user')
         router.push('login')
         }else{
-        console.log(res)
+        //console.log(res)
         localStorage.removeItem('token')
         localStorage.removeItem('user')
         router.push('login')
         }
     } catch (error) {
-        console.log(error)
+        console.error(error)
         localStorage.removeItem('token')
         localStorage.removeItem('user')
         router.push('login')

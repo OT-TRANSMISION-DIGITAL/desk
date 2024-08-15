@@ -146,7 +146,7 @@ const submit = async (e) => {
             router.push('/usuarios')
         }
     } catch (error) {
-        console.log(error);
+        console.error(error);
     }
 }
 
@@ -203,7 +203,7 @@ onMounted(async ()=>{
             roles.value = res.data.roles;
         }
     } catch (error) {
-        console.log(error);
+        console.error(error);
     }
 })
 

@@ -14,11 +14,11 @@ const deleted = async (id) => {
     try {
         const res = await deleteUsuario(id);
         if(res.status < 300){
-            console.log('Eliminado', id);
+            //console.log('Eliminado', id);
             location.reload();
         }
     } catch (error) {
-        console.log(error);
+        console.error(error);
     }
 }
 const addUser = () => {
@@ -36,10 +36,29 @@ onMounted(async () => {
             return item;
         });
         data.value = d;
+        paginateData();
     } catch (error) {
-        console.log(error);
+        console.error(error);
     }
 });
+
+async function paginateData() {
+    // Siclo para paginar la api mientrar traega resultados
+    let page = 2;
+    let res = await usuarios(page);
+    let d = res.data.data;
+    while(d.length > 0){
+        data.value = data.value.concat(d.map((item) => {
+            item['edit'] = edit
+            item['delete'] = deleted
+            item.rol_id = item.rol.nombre;
+            return item;
+        }));
+        page++;
+        res = await usuarios(page);
+        d = res.data.data;
+    }
+}
 
 </script>
 

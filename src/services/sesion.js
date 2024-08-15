@@ -2,7 +2,7 @@ import axios from './axios.js';
 
 export const login = async (correo, password) => {
     try {
-        const response = await axios.post('login', { correo, password });
+        const response = await axios.post('loginDesk', { correo, password });
         return response;
     } catch (error) {
         return Promise.reject(error);

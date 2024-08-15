@@ -5,46 +5,46 @@ import { visitas, del, autorizar, cancel, visita }  from '../../services/visitas
 import Table from '../../components/Tables/Table.vue';
 import Modal from '../../components/Modal.vue';
 const router = useRouter();
-const headers = ['Motivo','Dirección','Cliente', 'Técnico', 'Sucursal', 'Fecha', 'Estado'];
+const headers = ['Motivo','Dirección','Cliente', 'Técnico', 'Sucursal', 'Fecha de Solicitud', 'Estado'];
 const columns = ['motivo','direccion','cliente_id', 'tecnico_id', 'sucursal_id', 'fechaHoraSolicitud','estatus'];
 const data = ref([]);
 const visitaData = ref(null)
 const isOpenModal = ref(false)
 const edit = (id) => {
-    console.log('Editando', id);
+    //console.log('Editando', id);
     router.push(`/visitas/${id}`);
 }
 const cancelar = async (id) => {
     try {
         const res = await cancel(id);
         if(res.status < 300){
-            console.log('Cancelado', id);
+            //console.log('Cancelado', id);
             location.reload();
         }
     } catch (error) {
-        console.log(error);
+        console.error(error);
     }
 }
 const auto = async (id) => {
     try {
         const res = await autorizar(id);
         if(res.status < 300){
-            console.log('Autorizado', id);
+            //console.log('Autorizado', id);
             location.reload();
         }
     } catch (error) {
-        console.log(error);
+        console.error(error);
     }
 }
 const deleted = async (id) => {
     try {
         const res = await del(id);
         if(res.status < 300){
-            console.log('Eliminado', id);
+            //console.log('Eliminado', id);
             location.reload();
         }
     } catch (error) {
-        console.log(error);
+        console.error(error);
     }
 }
 const addUser = () => {
@@ -54,14 +54,14 @@ const document = async (id) => {
     try {
         const res = await pdf(id);
         if(res.status < 300){
-            console.log(res);
+            //console.log(res);
             const file = new Blob([res.data], { type: 'application/pdf' });
             const fileURL = URL.createObjectURL(file);
             window.open(fileURL, '_blank');
 
         }
     } catch (error) {
-        console.log(error);
+        console.error(error);
     }
 }
 const show = async (id) => {
@@ -69,10 +69,10 @@ const show = async (id) => {
         const res = await visita(id)
         if(res.status < 300){
             visitaData.value = res.data
-            console.log(res)
+            //console.log(res)
             isOpenModal.value = true
         }else{
-            console.log(res)
+            //console.log(res)
         }
     } catch (error) {
         console.error(error)
@@ -83,13 +83,13 @@ onMounted(async () => {
     try {
         const res = await visitas();
         const d = res.data.data;
-        console.log(d)
+        //console.log(d)
         data.value = d.map((item) => {
             item['edit'] = edit
-            item['delete'] = deleted
+            // item['delete'] = deleted
             item.cliente_id = item.cliente.nombre;
             item.tecnico_id = item.tecnico.nombre;
-            item.sucursal_id = item.sucursal.nombre;
+            item.sucursal_id = item.sucursal?.nombre || '';
             item['show'] = show
             if(item.estatus == 'Sin Autorizar'){
                 item['cancel'] = cancelar
@@ -99,10 +99,39 @@ onMounted(async () => {
             }
             return item;
         });
+        paginateData();
     } catch (error) {
-        console.log(error);
+        console.error(error);
     }
 });
+async function paginateData(params) {
+    // Siclo para paginar la api mientrar traega resultados
+    let page = 2;
+    let res = await visitas(page);
+    let d = res.data.data;
+    while(d.length > 0){
+        data.value = data.value.concat(d.map((item) => {
+            // item['delete'] = deleted
+            item.cliente_id = item.cliente.nombre;
+            item.tecnico_id = item.tecnico.nombre;
+            item.sucursal_id = item.sucursal?.nombre || '';
+            if(item.estatus == 'Sin Autorizar'){
+                item['show'] = show
+                item['cancel'] = cancelar
+                item['success'] = auto
+                item['edit'] = edit
+            }else if(item.estatus == 'Autorizada'){
+                item['show'] = show
+                item['cancel'] = cancelar
+                item['edit'] = edit
+            }
+            return item;
+        }));
+        page++;
+        res = await visitas(page);
+        d = res.data.data;
+    }
+}
 function convertirFecha(fechaOriginal){
     // Crear un objeto Date a partir de la cadena original
     const fecha = new Date(fechaOriginal);
@@ -153,7 +182,7 @@ function convertirFecha(fechaOriginal){
             <div class="mt-4 grid grid-cols-2 gap-4">
               <div>
                 <div class="text-sm font-medium text-gray-500">Nombre</div>
-                <div class="text-lg font-bold">{{visitaData.sucursal.nombre }}</div>
+                <div class="text-lg font-bold">{{visitaData.sucursal?.nombre || '' }}</div>
               </div>
               <div>
                 <div class="text-sm font-medium text-gray-500">Telefono</div>
@@ -169,12 +198,20 @@ function convertirFecha(fechaOriginal){
             <h2 class="text-2xl font-bold">Detalles de la Visita</h2>
             <div class="mt-4 grid grid-cols-2 gap-4">
               <div>
-                <div class="text-sm font-medium text-gray-500">Fecha</div>
+                <div class="text-sm font-medium text-gray-500">Fecha de solicitud</div>
                 <div class="text-lg font-bold">{{ convertirFecha(visitaData.fechaHoraSolicitud).split("\n")[0] }}</div>
               </div>
               <div>
-                <div class="text-sm font-medium text-gray-500">Hora</div>
+                <div class="text-sm font-medium text-gray-500">Hora de solicitud</div>
                 <div class="text-lg font-bold">{{ convertirFecha(visitaData.fechaHoraSolicitud).split("\n")[1] }}</div>
+              </div>
+              <div>
+                <div class="text-sm font-medium text-gray-500">Hora Llegada</div>
+                <div class="text-lg font-bold">{{ visitaData.fechaHoraLlegada ? convertirFecha(visitaData.fechaHoraLlegada).split("\n")[1] : '--:--' }}</div>
+              </div>
+              <div>
+                <div class="text-sm font-medium text-gray-500">Hora Salida</div>
+                <div class="text-lg font-bold">{{ visitaData.fechaHoraSalida ? convertirFecha(visitaData.fechaHoraSalida).split("\n")[1] : '--:--'}}</div>
               </div>
               <div>
                 <div class="text-sm font-medium text-gray-500">Cliente</div>

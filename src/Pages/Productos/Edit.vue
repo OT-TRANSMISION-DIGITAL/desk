@@ -3,7 +3,7 @@
       <form class="w-[35rem] max-w-4xl p-8 bg-white border-4 border-[#3E4095] rounded-md shadow-md"
         @submit="sub($event)"
       >
-        <h2 class="mb-5 text-4xl font-bold text-center text-[#3E4095]">Editar Producto</h2>
+        <h2 class="mb-5 text-4xl font-bold text-center text-[#3E4095]">Editar Producto / Servicio</h2>
         <div class="grid grid-cols-2 gap-10 mt-5">
             <div class="col-span-2">
                 <Input 
@@ -38,7 +38,7 @@
                 />
             </div>
             <div class="col-span-2">
-                <InputFile v-model="form.imagen.value" />
+                <InputFile v-model="form.imagen.value" v-model:image-s-r-c="imageSRC" />
                 <img ref="imgRef" alt="" class=""/>
                 <p class="text-red-500 text-sm">{{ form.imagen.error.message }}</p>
             </div>
@@ -76,6 +76,7 @@ const router = useRouter();
 const route = useRoute();
 const imgRef =ref(null)
 const loading = ref(false);
+const imageSRC = ref('')
 const beforeImagen = ref(null)
 const form = ref({
     nombre: {
@@ -168,6 +169,12 @@ const validar = () => {
         form.value.descripcion.error.message = 'La descripcion es requerido';
         valid = false;
     }
+    // validar descripcion mayor a 10
+    if(form.value.descripcion.value.length < 10){
+        form.value.descripcion.error.status = 'error';
+        form.value.descripcion.error.message = 'Debe tener al menos 10 caracteres';
+        valid = false;
+    }
     if(form.value.precio.value === ''){
         form.value.precio.error.status = 'error';
         form.value.precio.error.message = 'El precio es requerido';
@@ -184,8 +191,9 @@ onMounted(async()=>{
             form.value.descripcion.value = res.data.descripcion
             form.value.nombre.value = res.data.nombre
             form.value.precio.value = res.data.precio
+            imageSRC.value = res.data.img ? path_api + res.data.img : ''
         }else{
-            console.log(res)
+            //console.log(res)
         }
     } catch (error) {
         console.error(error)
@@ -223,7 +231,7 @@ const sendImagen = async (id) => {
             error.value = resUpdateImagen?.data?.message || 'Error al guardar la imagen';
         }
     } catch (err) {
-        console.log(err);
+        console.error(err);
         error.value = err?.response?.data?.message || err?.data?.message || err?.message || 'Error al guardar la imagen';
     }
 }

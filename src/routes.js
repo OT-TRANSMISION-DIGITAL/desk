@@ -26,6 +26,81 @@ const routes = [
                 },
             },
             {
+                path: "/usuarios",
+                components:{
+                    default: () => import("./Pages/Usuarios/Usuarios.vue"),
+                    title: () => import("./components/Title.vue"),
+                } ,
+                props:{
+                    title:{
+                        title: "Usuarios"
+                    }
+                }
+            },
+            {
+                path: "/usuarios/crear",
+                name: "CrearUsuario",
+                components: {
+                    default: () => import("./Pages/Usuarios/Crear.vue"),
+                    title: () => import("./components/Title.vue"),
+                } ,
+                props:{
+                    title:{
+                        title: "Crear Usuario"
+                    }
+                }
+            },
+            {
+                path: "/usuarios/:id",
+                name: "UpdateUsuario",
+                components: {
+                    default: () => import("./Pages/Usuarios/Edit.vue"),
+                    title: () => import("./components/Title.vue"),
+                } ,
+                props:{
+                    title:{
+                        title: "Actualizar Usuario"
+                    }
+                }
+            },
+            {
+                path: "/clientes",
+                components: {
+                    default: () => import("./Pages/Clientes/Clientes.vue"),
+                    title: () => import("./components/Title.vue"),
+                } ,
+                props:{
+                    title:{
+                        title: "Clientes"
+                    }
+                }
+            },
+            {
+                path: "/clientes/:id",
+                components: {
+                    default: () => import("./Pages/Clientes/Edit.vue"),
+                    title: () => import("./components/Title.vue"),
+                } ,
+                props:{
+                    title:{
+                        title: "Editar Cliente"
+                    }
+                }
+            },
+            {
+                path: "/clientes/crear",
+                name: "CrearClientes",
+                components: {
+                    default: () => import("./Pages/Clientes/Crear.vue"),
+                    title: () => import("./components/Title.vue"),
+                } ,
+                props:{
+                    title:{
+                        title: "Crear Cliente"
+                    }
+                }
+            },
+            {
                 path: "/visitas",
                 name: "Visitas",
                 components: {
@@ -112,7 +187,7 @@ const routes = [
                 } ,
                 props:{
                     title:{
-                        title: "Productos"
+                        title: "Producto / Servicio"
                     }
                 }
             },
@@ -125,7 +200,7 @@ const routes = [
                 } ,
                 props:{
                     title:{
-                        title: "Editar Producto"
+                        title: "Editar Producto / Servicio"
                     }
                 }
             },
@@ -138,7 +213,7 @@ const routes = [
                 } ,
                 props:{
                     title:{
-                        title: "Crear Producto"
+                        title: "Crear Producto / Servicio"
                     }
                 }
             },
@@ -178,6 +253,19 @@ const routes = [
                 props:{
                     title:{
                         title: "Crear Sucursal"
+                    }
+                }
+            },
+            {
+                path: "/agenda",
+                name: "Agenda",
+                components: {
+                    default: () => import("./Pages/Agenda/Agenda.vue"),
+                    title: () => import("./components/Title.vue"),
+                } ,
+                props:{
+                    title:{
+                        title: "Agenda"
                     }
                 }
             },

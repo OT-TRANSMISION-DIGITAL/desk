@@ -51,6 +51,14 @@
                 <div class="text-lg font-bold">{{ convertirFecha(ordenData.fechaHoraSolicitud).split("\n")[1] }}</div>
               </div>
               <div>
+                <div class="text-sm font-medium text-gray-500">Hora Llegada</div>
+                <div class="text-lg font-bold">{{ ordenData.fechaHoraLlegada ? convertirFecha(ordenData.fechaHoraLlegada).split("\n")[1] : '--:--' }}</div>
+              </div>
+              <div>
+                <div class="text-sm font-medium text-gray-500">Hora Salida</div>
+                <div class="text-lg font-bold">{{ ordenData.fechaHoraSalida ? convertirFecha(ordenData.fechaHoraSalida).split("\n")[1] : '--:--'}}</div>
+              </div>
+              <div>
                 <div class="text-sm font-medium text-gray-500">Cliente</div>
                 <div class="text-lg font-bold">{{ ordenData.cliente.nombre }}</div>
               </div>
@@ -100,6 +108,15 @@
                 <div class="text-sm font-medium text-gray-500">Hora</div>
                 <div class="text-lg font-bold">{{ convertirFecha(visitaData.fechaHoraSolicitud).split("\n")[1] }}</div>
               </div>
+              
+              <div>
+                <div class="text-sm font-medium text-gray-500">Hora Llegada</div>
+                <div class="text-lg font-bold">{{ visitaData.fechaHoraLlegada ? convertirFecha(visitaData.fechaHoraLlegada).split("\n")[1] : '--:--' }}</div>
+              </div>
+              <div>
+                <div class="text-sm font-medium text-gray-500">Hora Salida</div>
+                <div class="text-lg font-bold">{{ visitaData.fechaHoraSalida ? convertirFecha(visitaData.fechaHoraSalida).split("\n")[1] : '--:--'}}</div>
+              </div>
               <div>
                 <div class="text-sm font-medium text-gray-500">Cliente</div>
                 <div class="text-lg font-bold">{{ visitaData.cliente.nombre }}</div>
@@ -141,7 +158,7 @@ onMounted(async () => {
         if(resTecnicos.status < 300){
             tecnicos.value = resTecnicos.data
             tecnico_id.value = tecnicos.value[0].id
-            console.log(tecnico_id.value)
+            //console.log(tecnico_id.value)
             await getAgenda(tecnico_id.value)
         }
     } catch (error) {
@@ -188,7 +205,7 @@ const getAgenda = async (id) => {
 
 async function actionCard (event) {
     const {id, tipo} = event
-    console.log(event.id)
+    //console.log(event.id)
     if(tipo == 'ordenes'){
         await modalOrdenes(id)
     }
@@ -203,7 +220,7 @@ async function modalOrdenes(id) {
             ordenData.value = res.data
             isOpenModalOrden.value = true
         }else{
-            console.log(res)
+            //console.log(res)
         }
     } catch (error) {
         console.error(error)
@@ -216,7 +233,7 @@ async function modalVisita(id) {
             visitaData.value = res.data
             isOpenModalVisita.value = true
         }else{
-            console.log(res)
+            //console.log(res)
         }
     } catch (error) {
         console.error(error)

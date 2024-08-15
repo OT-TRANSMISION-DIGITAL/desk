@@ -1,5 +1,5 @@
 <template>
-  <footer class="bg-[#3e4095] shadow py-2 dark:bg-gray-800 w-full dark relative bottom-0">
+  <footer class="bg-[#3e4095] shadow py-2 dark:bg-gray-800 min-w-full dark relative bottom-0">
       <div class="max-w-screen-xl p-4 md:flex md:items-center md:justify-between">
         <span class="text-sm text-gray-500 sm:text-center dark:text-gray-400">© 2024 <a href="https://flowbite.com/" class="hover:underline">OT TRANSMISIÓN DIGITAL</a>. All Rights Reserved.
       </span>
