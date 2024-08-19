@@ -20,7 +20,15 @@
                         placeholder="Fecha de solicitud" type="date" name="fechaHoraSolicitud" id="fechaHoraSolicitud"
                         :validation-status="form.fechaSolicitud.error.status"
                         :change="changueTime"
-                        :min-date="new Date().toISOString().split('T')[0]"
+                        :min-date="new Date().toLocaleDateString('en-ZA', {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: false,
+    }).split('.')[0].replace('T', ' ').replaceAll('/', '-').replace(',', '').split(' ')[0]"
                         :validation-message="form.fechaSolicitud.error.message" 
                         />
                 </div>

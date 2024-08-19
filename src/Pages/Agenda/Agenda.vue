@@ -66,6 +66,10 @@
                 <div class="text-sm font-medium text-gray-500">Tecnico</div>
                 <div class="text-lg font-bold">{{ ordenData.tecnico.nombre }} </div>
               </div>
+              <div v-if="ordenData.sucursal">
+                  <div class="text-sm font-medium text-gray-500">Sucursal</div>
+                  <div class="text-lg font-bold">{{ ordenData.sucursal.nombre }} </div>
+              </div>
             </div>
         </template>
         <template v-slot:footer>
@@ -81,20 +85,22 @@
     <Modal  v-model:isOpen="isOpenModalVisita">
         <template v-slot:header>
             <h2 class="text-2xl font-bold">Visita: {{ visitaData?.id || '0'  }}</h2>
-            <h2 class="text-xl font-bold">Sucursal</h2>
-            <div class="mt-4 grid grid-cols-2 gap-4">
-              <div>
-                <div class="text-sm font-medium text-gray-500">Nombre</div>
-                <div class="text-lg font-bold">{{visitaData.sucursal.nombre }}</div>
-              </div>
-              <div>
-                <div class="text-sm font-medium text-gray-500">Telefono</div>
-                <div class="text-lg font-bold">{{ visitaData.sucursal.telefono }}</div>
-              </div>
-              <div>
-                <div class="text-sm font-medium text-gray-500">Direccion</div>
-                <div class="text-lg font-bold">{{ visitaData.sucursal.direccion }}</div>
-              </div>
+            <div v-if="visitaData.sucursal">
+                <h2 class="text-xl font-bold">Sucursal</h2>
+                <div class="mt-4 grid grid-cols-2 gap-4">
+                    <div>
+                        <div class="text-sm font-medium text-gray-500">Nombre</div>
+                        <div class="text-lg font-bold">{{visitaData.sucursal?.nombre || '' }}</div>
+                    </div>
+                    <!-- <div>
+                        <div class="text-sm font-medium text-gray-500">Telefono</div>
+                        <div class="text-lg font-bold">{{ visitaData.sucursal.telefono }}</div>
+                    </div>
+                    <div>
+                        <div class="text-sm font-medium text-gray-500">Direccion</div>
+                        <div class="text-lg font-bold">{{ visitaData.sucursal.direccion }}</div>
+                    </div> -->
+                </div>
             </div>
         </template>
         <template v-slot:body>
